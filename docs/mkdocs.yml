@@ -18,10 +18,20 @@ nav:
       - PCA: guide/pca.md
       - Sources of variation: guide/variance.md
       - Baseline classifier: guide/baseline.md
-      - Within-batch evaluation and SHAP: guide/within-batch.md
+      - Within-batch evaluation and SHAP: guide/within-batch.md 
   - Walkthrough notebooks: walkthrough.md
   - API reference: reference.md
   - Limitations: limitations.md
+  - Example notebooks:
+      - nbs/0_ingest_data.ipynb
+      - nbs/1_sample_overlap_and_contamination.ipynb
+      - nbs/2_shorcut_learning.ipynb
+
+plugins:
+    - mkdocs-jupyter:
+          notebook_dirs:
+              nbs: ../notebooks
+
 
 # Later: theme material (mkdocs-material), plugins mkdocstrings[python] for the API reference and
 # mkdocs-jupyter to render the walkthrough notebooks. Add them to the `docs` extra in pyproject.toml.
