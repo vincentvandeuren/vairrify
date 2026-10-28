@@ -15,16 +15,26 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License"
 ]
+requires-python = ">=3.10"
 dependencies = [
-    "loguru",
-    "mkdocs",
-    "pip",
-    "python-dotenv",
-    "ruff",
-    "tqdm",
-    "typer",
+    "tcrio>=0.6.0b7",
+    "polars>=1.42,<2.0",  # as tcrio: its compiled plugin is tied to the polars ABI
+    "numpy>=2.2",
+    "pandas>=2.0",
+    "pyarrow>=14",  # polars -> pandas, for the seaborn heatmaps
+    "scipy>=1.14",
+    "scikit-learn>=1.4",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "shap>=0.45",
 ]
-requires-python = "~=3.12.0"
+
+[project.optional-dependencies]
+dev = ["jupyterlab", "nbconvert", "pytest", "ruff"]
+docs = ["mkdocs"]
+
+[project.urls]
+Repository = "https://github.com/vincentvandeuren/vairrify"
 
 
 [tool.ruff]

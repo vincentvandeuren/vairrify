@@ -1,4 +1,4 @@
-# vairrify
+# vAIRRify
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
@@ -6,7 +6,7 @@
 
 Detecting bias-driven predictions in repertoire machine learning.
 
-## Project Organization
+## Project Organization (TODO - from template)
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen

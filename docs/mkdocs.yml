@@ -1,4 +1,27 @@
-site_name: vairrify
-# 
+site_name: vAIRRify
+site_description: Detecting technical shortcuts in AIRR-seq machine learning
 site_author: Vincent M.L. Van Deuren
-# 
+repo_url: https://github.com/vincentvandeuren/vairrify
+theme: readthedocs
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Getting started: getting-started.md
+  - Concepts: concepts.md
+  - Feature blocks: feature-blocks.md
+  - Germline variation: germline.md
+  - The audit, step by step:
+      - QC: guide/qc.md
+      - Study design: guide/design.md
+      - Balance over batches: guide/balance.md
+      - PCA: guide/pca.md
+      - Sources of variation: guide/variance.md
+      - Baseline classifier: guide/baseline.md
+      - Within-batch evaluation and SHAP: guide/within-batch.md
+  - Walkthrough notebooks: walkthrough.md
+  - API reference: reference.md
+  - Limitations: limitations.md
+
+# Later: theme material (mkdocs-material), plugins mkdocstrings[python] for the API reference and
+# mkdocs-jupyter to render the walkthrough notebooks. Add them to the `docs` extra in pyproject.toml.

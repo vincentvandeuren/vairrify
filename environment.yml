@@ -1,0 +1,21 @@
+# conda env create -f environment.yml   (from the repository root)
+# The scientific stack comes from conda-forge; tcrio and vairrify itself are installed with pip.
+name: vairrify
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - polars>=1.42,<2.0   # tcrio needs polars < 2
+  - numpy>=2.2
+  - pandas>=2.0
+  - pyarrow>=14
+  - scipy>=1.14
+  - scikit-learn>=1.4
+  - matplotlib>=3.8
+  - seaborn>=0.13
+  - shap>=0.45
+  - jupyterlab
+  - pip:
+      - tcrio>=0.6.0b7
+      - -e .
