@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Detecting technical shortcuts in AIRR-seq machine learning" /><meta name="author" content="Vincent M.L. Van Deuren" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>vAIRRify</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> vAIRRify
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-it-checks">What it checks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#where-next">Where next</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="getting-started/">Getting started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="concepts/">Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="feature-blocks/">Feature blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="germline/">Germline variation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/qc/">QC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/design/">Study design</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/balance/">Balance over batches</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/pca/">PCA</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/variance/">Sources of variation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/baseline/">Baseline classifier</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/within-batch/">Within-batch evaluation and SHAP</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="walkthrough/">Walkthrough notebooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="reference/">API reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">vAIRRify</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="vairrify">vAIRRify</h1>
+<p>Machine-learning models trained on adaptive immune receptor repertoires (AIRR-seq) can reach high
+accuracy by recognising technical variation, such as the sequencing batch, depth or library
+preparation, instead of the biology they are meant to learn: <strong>shortcut learning</strong>. vAIRRify audits a
+dataset for such shortcuts, before a model is trained or while its results are evaluated.</p>
+<p>It implements the analyses of the first part of <em>Disentangling Biological Signal from Technical Bias
+in Disease Diagnostics from Adaptive Immune Receptor Repertoires</em> (see <a href="#citation">Citation</a>).</p>
+<p>Why it matters, from the manuscript:</p>
+<ul>
+<li>In the Mal-ID training data (Zaslavsky et al.), a random forest on simple repertoire properties
+  (repertoire size, V and J usage, V-J pairing, VDJ recombination statistics) predicted each disease
+  as well as, or better than, three published classifiers (Table 1)</li>
+<li>Those classifiers performed worse within batches than across them, a sign of shortcut learning (Fig. 4)</li>
+<li>They also transferred poorly to independent COVID-19, lupus and T1D cohorts</li>
+</ul>
+<h2 id="what-it-checks">What it checks</h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Analysis</th>
+<th>Manuscript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Are the label and the batch tied together?</td>
+<td>repertoires per batch and label, Cramér's V, mixed- vs single-label batches</td>
+<td>Fig. S1</td>
+</tr>
+<tr>
+<td>What drives variation in the repertoire properties?</td>
+<td>PCA, PVCA, PERMANOVA</td>
+<td>Fig. 2</td>
+</tr>
+<tr>
+<td>Can simple repertoire properties predict the label?</td>
+<td>random-forest baseline classifier</td>
+<td>Table 1, Fig. 3A</td>
+</tr>
+<tr>
+<td>Does that signal hold once the batch is fixed?</td>
+<td>within-batch evaluation</td>
+<td>within-batch evaluation</td>
+</tr>
+<tr>
+<td>Which features carry it?</td>
+<td>SHAP</td>
+<td>Fig. 3B</td>
+</tr>
+</tbody>
+</table>
+<h2 id="install">Install</h2>
+<pre><code class="language-bash">pip install vairrify          # TODO: once on PyPI; until then see Installation
+</code></pre>
+<h2 id="quickstart">Quickstart</h2>
+<pre><code class="language-python">import vairrify as vf
+
+reps = vf.load(&quot;data/processed/my_dataset&quot;, locus=&quot;TRB&quot;, features=&quot;V genes&quot;)
+qc = reps.qc()
+design = reps.design(label=&quot;disease&quot;, batch=&quot;study_name&quot;, covariates=[&quot;age&quot;, &quot;sex&quot;], exclude=qc.failed)
+
+design.variance()                    # what drives V-gene usage
+base = design.baseline()             # can V-gene usage predict the label?
+design.within_batch(base)            # ... also within mixed-label batches?
+</code></pre>
+<h2 id="where-next">Where next</h2>
+<ul>
+<li><a href="installation/">Installation</a> and <a href="getting-started/">Getting started</a>: from clonotype files to a first audit</li>
+<li><a href="concepts/">Concepts</a>: shortcut learning, variable roles, feature blocks</li>
+<li><a href="guide/qc/">The audit, step by step</a>: what each step answers and how to read it</li>
+<li><a href="walkthrough/">Walkthrough notebooks</a></li>
+</ul>
+<h2 id="citation">Citation</h2>
+<p>Stadelmaier J.*, Van Deuren V.*, Greiff V., Kowarik M., Mariotti-Ferrandiz E., Minervina A. A.,
+Nahnsen S., Pogorelyy M. V., Rawat P., Sandve G. K., Semerci A., Stervbo U., Thomas P. G., Yaari G.,
+Gabernet G.§, Meysman P.§ <em>Disentangling Biological Signal from Technical Bias in Disease Diagnostics
+from Adaptive Immune Receptor Repertoires.</em> TODO: journal or preprint, year, DOI.
+(* shared first authors, § shared senior authors)</p>
+<p>vAIRRify is MIT-licensed.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="installation/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vincentvandeuren/vairrify" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+      <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-10-28 16:28:40.730106+00:00
+-->

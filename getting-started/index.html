@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Getting started - vAIRRify</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Getting started";
+        var mkdocs_page_input_path = "getting-started.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> vAIRRify
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Getting started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-ingest-the-data-notebook-0">1. Ingest the data (notebook 0)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-check-sample-overlap-and-contamination-notebook-1-optional">2. Check sample overlap and contamination (notebook 1, optional)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-run-the-audit-notebook-2">3. Run the audit (notebook 2)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-outputs">4. Outputs</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concepts/">Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-blocks/">Feature blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../germline/">Germline variation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/qc/">QC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/design/">Study design</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/balance/">Balance over batches</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/pca/">PCA</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/variance/">Sources of variation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/baseline/">Baseline classifier</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/within-batch/">Within-batch evaluation and SHAP</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Walkthrough notebooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../reference/">API reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">vAIRRify</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Getting started</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/getting-started.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="getting-started">Getting started</h1>
+<p>From clonotype files to a first audit, following the <a href="../walkthrough/">walkthrough notebooks</a>.</p>
+<h2 id="1-ingest-the-data-notebook-0">1. Ingest the data (notebook 0)</h2>
+<ul>
+<li>What you need: a folder of clonotype tables (AIRR, MiXCR, Adaptive, 10x, ...), and a way to map each
+  file to a repertoire and a patient (e.g. a regular expression on the file name)</li>
+<li><code>tcrio</code>'s <code>DatasetIngester</code> writes a dataset in a common format</li>
+<li>Metadata: patient-level (age, sex, ancestry) and repertoire-level (batch, disease status, CV fold)</li>
+<li>Check the filtering report: which rows were dropped, and why</li>
+<li>TODO: link to tcrio's documentation for readers and mappers</li>
+</ul>
+<h2 id="2-check-sample-overlap-and-contamination-notebook-1-optional">2. Check sample overlap and contamination (notebook 1, optional)</h2>
+<ul>
+<li>Shared clonotypes between pairs of repertoires; unrelated people rarely share many of their top clones</li>
+<li>In the manuscript (Rawat et al. T1D cohort): a pair whose top 250 clones shared ≥ 50 clones, with a
+  positive Spearman correlation of their duplicate counts, was treated as contamination and removed
+  (6 pairs, 12 patients)</li>
+<li>TODO: tcrio's <code>OverlapAnalyzer</code> uses <code>top_n=250</code> but flags at 40 shared clones by default; align with
+  the manuscript's 50, or explain the difference</li>
+</ul>
+<h2 id="3-run-the-audit-notebook-2">3. Run the audit (notebook 2)</h2>
+<ul>
+<li>Choose the dataset, the locus and the features (see <a href="../feature-blocks/">Feature blocks</a>)</li>
+<li>Inspect and clean the metadata</li>
+<li>QC, then the study design: label, batch, covariates, controls</li>
+<li>Balance, PCA, sources of variation, baseline classifier, within-batch evaluation, SHAP</li>
+<li>To compare features (e.g. V genes with depth), rerun with another choice</li>
+</ul>
+<h2 id="4-outputs">4. Outputs</h2>
+<ul>
+<li>Every step returns a table, and <code>vf.plots</code> draws it</li>
+<li><code>vf.save(folder, qc=qc, ...)</code> writes the tables as TSV</li>
+<li>TODO: a suggested folder layout per dataset, locus, label and features</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../concepts/" class="btn btn-neutral float-right" title="Concepts">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vincentvandeuren/vairrify" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../concepts/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Feature blocks - vAIRRify</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Feature blocks";
+        var mkdocs_page_input_path = "feature-blocks.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> vAIRRify
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concepts/">Concepts</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Feature blocks</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#notes-per-block">Notes per block</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#in-the-manuscript-methods-baseline-machine-learning">In the manuscript (Methods, "Baseline machine learning")</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#adding-a-block">Adding a block</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../germline/">Germline variation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/qc/">QC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/design/">Study design</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/balance/">Balance over batches</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/pca/">PCA</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/variance/">Sources of variation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/baseline/">Baseline classifier</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/within-batch/">Within-batch evaluation and SHAP</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Walkthrough notebooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../reference/">API reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">vAIRRify</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Feature blocks</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/feature-blocks.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="feature-blocks">Feature blocks</h1>
+<p>A feature block is a per-repertoire table computed by tcrio. <code>vf.feature_blocks()</code> lists them.
+<em>Technical</em> blocks are the manuscript's general repertoire properties, which technical bias shapes;
+<em>biological</em> blocks are confounders.</p>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Kind</th>
+<th>Source (tcrio)</th>
+<th>Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V genes</td>
+<td>technical</td>
+<td><code>GeneCountsSummary</code></td>
+<td>share of clonotypes using each V gene</td>
+</tr>
+<tr>
+<td>J genes</td>
+<td>technical</td>
+<td><code>GeneCountsSummary</code></td>
+<td>share of clonotypes using each J gene</td>
+</tr>
+<tr>
+<td>VJ bias</td>
+<td>technical</td>
+<td><code>GeneCountsSummary</code></td>
+<td>log ratio of each V-J pairing to independent V and J usage</td>
+</tr>
+<tr>
+<td>VDJ stats</td>
+<td>technical</td>
+<td><code>VdjStatisticsSummary</code></td>
+<td>mean, sd, skew, kurtosis of trimming, P and N nucleotides</td>
+</tr>
+<tr>
+<td>repertoire size</td>
+<td>technical</td>
+<td>repertoire counts</td>
+<td>number of unique clonotypes</td>
+</tr>
+<tr>
+<td>depth</td>
+<td>technical</td>
+<td><code>RarefactionReport</code></td>
+<td>reads; expected clonotypes at 20k / 48k / 200k / 500k reads</td>
+</tr>
+<tr>
+<td>HLA</td>
+<td>biological</td>
+<td><code>RepertoireHlaInference</code></td>
+<td>inferred HLA carriage (score &gt; 0.5)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notes-per-block">Notes per block</h2>
+<ul>
+<li><strong>V genes, J genes</strong>: PCA and the variance analysis use the manuscript's profile (log1p counts,
+  L2-normalised). TRBV6-2 and TRBV6-3 are identical; tcrio reports both as TRBV6-2.</li>
+<li><strong>V genes with germline variation</strong> (TRBV4-3, TRBV6-2/6-3, TRBV7-2, TRBV7-3, TRBV28, TRBV30):
+  deletion polymorphisms and linked alleles, so their variation needn't be technical. Marked in the PCA
+  plot; evidence on <a href="../germline/">Germline variation</a>.</li>
+<li><strong>depth</strong>: past a repertoire's own reads the rarefaction curve is extrapolated. TODO: how to read
+  that, and the share of repertoires reaching each depth.</li>
+<li><strong>HLA</strong>: dichotomised at 0.5, as in the manuscript, so repertoire size doesn't leak in. On the
+  zaslavsky data the dichotomised scores predict much less than Table 1's HLA column (influenza
+  AUC 0.54 vs 0.96); the raw scores reproduce it. TODO: check which the table used.</li>
+<li>Only TRB is supported by <code>GeneCountsSummary</code> and the HLA model for now</li>
+</ul>
+<h2 id="in-the-manuscript-methods-baseline-machine-learning">In the manuscript (Methods, "Baseline machine learning")</h2>
+<ul>
+<li><strong>Repertoire size</strong>: the total number of unique clonotypes</li>
+<li><strong>V and J usage</strong>: the frequency of clonotypes using each gene</li>
+<li><strong>V-J pairing</strong>: the log-fold change of each V-J pair relative to what independent V and J usage predicts</li>
+<li><strong>VDJ statistics</strong>: germline-encoded nucleotides identified from the V and J alleles (for D, the
+  longest possible match); from these, exonuclease deletions (trims) and untemplated (N) insertions at
+  each junction boundary and their totals; then the mean, standard deviation, skewness and kurtosis</li>
+<li><strong>HLA</strong>: inferred from the TCR repertoire with the method of ElAbd et al. (HLA2TCR), dichotomised
+  (&gt; 0.5) "to prevent repertoire size from influencing HLA genotype prediction scores"</li>
+<li>Duplicate clonotypes (same <code>v_call</code>, CDR3 amino acids and <code>j_call</code>) were merged; V-gene counts use a
+  single clonal representative</li>
+<li>The general repertoire properties came to 676 features</li>
+</ul>
+<h2 id="adding-a-block">Adding a block</h2>
+<ul>
+<li>TODO: example of a <code>FeatureBlock</code> reading another tcrio result, registered in <code>FEATURE_BLOCKS</code></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../concepts/" class="btn btn-neutral float-left" title="Concepts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../germline/" class="btn btn-neutral float-right" title="Germline variation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vincentvandeuren/vairrify" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../concepts/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../germline/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
+</html>

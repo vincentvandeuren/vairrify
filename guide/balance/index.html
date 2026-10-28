@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Balance over batches - vAIRRify</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Balance over batches";
+        var mkdocs_page_input_path = "guide/balance.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> vAIRRify
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../concepts/">Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../feature-blocks/">Feature blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../qc/">QC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../design/">Study design</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Balance over batches</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-it-answers">What it answers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reading-the-result">Reading the result</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#in-the-manuscript-fig-s1">In the manuscript (Fig. S1)</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pca/">PCA</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../variance/">Sources of variation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../baseline/">Baseline classifier</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../within-batch/">Within-batch evaluation and SHAP</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">vAIRRify</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">The audit, step by step</li>
+      <li class="breadcrumb-item active">Balance over batches</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/guide/balance.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="balance-over-batches-fig-s1">Balance over batches (Fig. S1)</h1>
+<p><code>balance = design.balance()</code> · <code>vf.plots.balance(balance)</code></p>
+<h2 id="what-it-answers">What it answers</h2>
+<p>Is the label tied to the batch? If so, recognising the batch is enough to predict the label.</p>
+<h2 id="how-it-works">How it works</h2>
+<ul>
+<li>Repertoires per batch and label level</li>
+<li>Bias-corrected Cramér's V between batch and label: <strong>balanced</strong> (&lt; 0.1), <strong>imbalanced</strong> (0.1–0.5),
+  <strong>confounded</strong> (≥ 0.5)</li>
+<li>Each batch is <strong>mixed-label</strong> (more than one label level) or <strong>single-label</strong></li>
+</ul>
+<h2 id="reading-the-result">Reading the result</h2>
+<ul>
+<li>Only mixed-label batches allow a <a href="../within-batch/">within-batch evaluation</a></li>
+<li>Zaslavsky (TRB, disease): confounded (Cramér's V 0.93); 4 of 11 batches are mixed-label: the HIV
+  study, the T1D biobank and the two adult lupus batches</li>
+</ul>
+<h2 id="in-the-manuscript-fig-s1">In the manuscript (Fig. S1)</h2>
+<ul>
+<li>Repertoires of each disease class per batch, in the Mal-ID data</li>
+<li>Identifiers for library preparation or sequencing runs weren't available, so each study was
+  treated as one batch</li>
+<li>Only HIV, T1D and lupus had mixed-label batches, so only those could be evaluated within batch;
+  COVID-19, influenza and healthy controls came from single-label batches</li>
+<li>The T1D mixed-label batch held only three healthy repertoires</li>
+<li>Recommendation: process samples of the different labels in the same batches</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../design/" class="btn btn-neutral float-left" title="Study design"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pca/" class="btn btn-neutral float-right" title="PCA">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vincentvandeuren/vairrify" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../design/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pca/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
+</html>

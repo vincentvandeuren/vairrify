@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Baseline classifier - vAIRRify</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Baseline classifier";
+        var mkdocs_page_input_path = "guide/baseline.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> vAIRRify
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../concepts/">Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../feature-blocks/">Feature blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../qc/">QC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../design/">Study design</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../balance/">Balance over batches</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pca/">PCA</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../variance/">Sources of variation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Baseline classifier</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-it-answers">What it answers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reading-the-result">Reading the result</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#in-the-manuscript-table-1-fig-3">In the manuscript (Table 1, Fig. 3)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#caveats">Caveats</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../within-batch/">Within-batch evaluation and SHAP</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">vAIRRify</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">The audit, step by step</li>
+      <li class="breadcrumb-item active">Baseline classifier</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/guide/baseline.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="baseline-classifier-table-1-fig-3a">Baseline classifier (Table 1, Fig. 3A)</h1>
+<p><code>base = design.baseline(cv_column=..., min_class_size=10, cv_repeats=3)</code> · <code>vf.plots.baseline(base)</code></p>
+<h2 id="what-it-answers">What it answers</h2>
+<p>Can a simple classifier predict the label from the features alone? If it can, a downstream model
+can take the same route.</p>
+<h2 id="how-it-works">How it works</h2>
+<ul>
+<li>A random forest predicts each label class against the rest, scored out of fold (AUC and average
+  precision)</li>
+<li><code>cv_column</code>: the downstream model's own folds. Without it: 3 random folds that keep patients
+  together and are stratified on batch × label, repeated <code>cv_repeats</code> times.</li>
+<li>The batch is predicted too (a positive control), as are the controls (should sit at 0.5)</li>
+</ul>
+<h2 id="reading-the-result">Reading the result</h2>
+<ul>
+<li>A high AUC is a shortcut risk, not evidence of biology</li>
+<li>TODO: Table 1 comparison for zaslavsky, run with vAIRRify (general repertoire properties, HLA, both)</li>
+</ul>
+<h2 id="in-the-manuscript-table-1-fig-3">In the manuscript (Table 1, Fig. 3)</h2>
+<ul>
+<li>Random forest, 200 trees, <code>class_weight="balanced_subsample"</code>, no tuning (scikit-learn 1.8.0);
+  the same 3-fold cross-validation splits as the original Mal-ID study; ROC AUC and average precision
+  on the out-of-fold scores</li>
+<li>TCR only, which showed the stronger biases; 676 features of general repertoire properties</li>
+<li>Out-of-fold AUC per disease (one against the rest):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Disease</th>
+<th>General properties</th>
+<th>HLA</th>
+<th>General + HLA</th>
+<th>Mal-ID models 1 / 2 / 3 (reported)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HIV</td>
+<td>0.964</td>
+<td>0.894</td>
+<td>0.963</td>
+<td>0.93 / 0.74 / 0.93</td>
+</tr>
+<tr>
+<td>T1D</td>
+<td>0.974</td>
+<td>0.960</td>
+<td>0.985</td>
+<td>0.93 / 0.72 / 0.94</td>
+</tr>
+<tr>
+<td>Lupus</td>
+<td>0.949</td>
+<td>0.732</td>
+<td>0.955</td>
+<td>0.92 / 0.81 / 0.92</td>
+</tr>
+<tr>
+<td>COVID-19</td>
+<td>0.958</td>
+<td>0.884</td>
+<td>0.958</td>
+<td>0.91 / 0.89 / 0.91</td>
+</tr>
+<tr>
+<td>Influenza</td>
+<td>0.999</td>
+<td>0.960</td>
+<td>1.000</td>
+<td>0.97 / 0.83 / 0.95</td>
+</tr>
+<tr>
+<td>Healthy</td>
+<td>0.957</td>
+<td>0.826</td>
+<td>0.959</td>
+<td>0.91 / 0.80 / 0.90</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Influenza: AUC 0.999, AP 0.987; repertoire size was the most important feature. Influenza
+  repertoires were significantly larger than the rest (Mann-Whitney U, p = 9.68e-20), reflecting
+  sequencing depth or cell numbers in that study.</li>
+<li>HLA features alone reached AUC 0.960 for influenza</li>
+<li>HIV from HLA: the most predictive alleles were tied to ancestry (European-associated alleles
+  negatively, HLA-A*23:01, enriched in African populations, positively), none with known HIV
+  associations: a geographic shortcut</li>
+</ul>
+<h2 id="caveats">Caveats</h2>
+<ul>
+<li>Forest settings differ from the manuscript's (400 trees, <code>max_features=0.05</code>, <code>max_depth=10</code>; pass
+  <code>rf=</code> to change them)</li>
+<li>Classes with fewer than <code>min_class_size</code> repertoires (or rest) are skipped</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../variance/" class="btn btn-neutral float-left" title="Sources of variation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../within-batch/" class="btn btn-neutral float-right" title="Within-batch evaluation and SHAP">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vincentvandeuren/vairrify" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../variance/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../within-batch/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
+</html>
