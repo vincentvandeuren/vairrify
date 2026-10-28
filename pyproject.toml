@@ -31,7 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["jupyterlab", "nbconvert", "pytest", "ruff"]
-docs = ["mkdocs"]
+docs = ["mkdocs", "mkdocs-jupyter"]
 
 [project.urls]
 Repository = "https://github.com/vincentvandeuren/vairrify"
