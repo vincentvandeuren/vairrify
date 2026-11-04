@@ -22,10 +22,10 @@ nav:
   - Walkthrough notebooks: walkthrough.md
   - API reference: reference.md
   - Limitations: limitations.md
-  - Example notebooks:
+  - Walkthrough notebooks:
       - nbs/0_ingest_data.ipynb
       - nbs/1_sample_overlap_and_contamination.ipynb
-      - nbs/2_shorcut_learning.ipynb
+      - nbs/2_shortcut_learning.ipynb
 
 plugins:
     - mkdocs-jupyter:
