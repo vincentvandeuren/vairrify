@@ -31,7 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["jupyterlab", "nbconvert", "pytest", "ruff"]
-docs = ["mkdocs", "mkdocs-jupyter"]
+docs = ["mkdocs>=1.6", "mkdocs-jupyter>=0.27"]  # docs/hooks needs mkdocs 1.6; notebook_dirs tested on 0.27
 
 [project.urls]
 Repository = "https://github.com/vincentvandeuren/vairrify"

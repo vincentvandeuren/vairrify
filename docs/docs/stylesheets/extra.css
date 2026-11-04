@@ -1,0 +1,6 @@
+/* The readthedocs theme keeps table cells on one line and scrolls wide tables sideways, which hides
+   the right-hand columns (e.g. the downloads on the walkthrough page). Let the cells wrap instead. */
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+  white-space: normal;
+}

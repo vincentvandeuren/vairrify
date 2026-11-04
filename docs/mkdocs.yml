@@ -18,19 +18,32 @@ nav:
       - PCA: guide/pca.md
       - Sources of variation: guide/variance.md
       - Baseline classifier: guide/baseline.md
-      - Within-batch evaluation and SHAP: guide/within-batch.md 
-  - Walkthrough notebooks: walkthrough.md
-  - API reference: reference.md
-  - Limitations: limitations.md
+      - Within-batch evaluation and SHAP: guide/within-batch.md
   - Walkthrough notebooks:
-      - nbs/0_ingest_data.ipynb
-      - nbs/1_sample_overlap_and_contamination.ipynb
-      - nbs/2_shortcut_learning.ipynb
+      - Overview and downloads: walkthrough.md
+      - "0. Ingest the data": nbs/0_ingest_data.ipynb
+      - "1. Sample overlap and contamination": nbs/1_sample_overlap_and_contamination.ipynb
+      - "2. Shortcut learning": nbs/2_shortcut_learning.ipynb
+  - Advanced examples:
+      - "B cells (IGH)": nbs/2_shortcut_learning_bcr.ipynb
+      - "Another dataset and label": nbs/2_shortcut_learning_vlasova.ipynb
+#   - API reference: reference.md
+  - Limitations: limitations.md
+
+extra_css:
+    - stylesheets/extra.css   # let table cells wrap, so wide tables don't hide their last columns
+
+markdown_extensions:
+    - attr_list   # {: download=... } on the notebook download links
 
 plugins:
     - mkdocs-jupyter:
           notebook_dirs:
               nbs: ../notebooks
+          ignore_h1_titles: true   # use the nav titles above; the three step-2 notebooks share one H1
+
+hooks:
+    - hooks/notebook_downloads.py   # copies each notebook to download/, for the links in walkthrough.md
 
 
 # Later: theme material (mkdocs-material), plugins mkdocstrings[python] for the API reference and
