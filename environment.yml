@@ -6,7 +6,7 @@ channels:
 dependencies:
   - python=3.12
   - pip
-  - polars>=1.42,<2.0   # tcrio needs polars < 2
+  - polars>=1.42
   - numpy>=2.2
   - pandas>=2.0
   - pyarrow>=14
@@ -17,5 +17,5 @@ dependencies:
   - shap>=0.45
   - jupyterlab
   - pip:
-      - tcrio>=0.6.0b7
+      - tcrio>=1.0.0b8
       - -e .
