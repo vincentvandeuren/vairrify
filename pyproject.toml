@@ -26,6 +26,7 @@ dependencies = [
     "scikit-learn>=1.4",
     "matplotlib>=3.8",
     "seaborn>=0.13",
+    "colorcet>=3.0",  # glasbey colours for curves with many classes
     "shap>=0.45",
 ]
 
