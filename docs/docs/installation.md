@@ -5,7 +5,7 @@
 - Python 3.10 or newer
 - [tcrio](https://github.com/vincentvandeuren/tcr_qc), which reads and processes the repertoires. It is
   installed automatically, from PyPI.
-- polars below 2.0: tcrio's compiled extension is tied to the polars version it was built against.
+- polars (below 2 i guess, I think tcrio pins that, but I might want to remove that pin #TODO)
 
 ## pip
 
@@ -25,18 +25,3 @@ cd vairrify
 conda env create -f environment.yml
 conda activate vairrify
 ```
-
-## For development
-
-```bash
-pip install -e ".[dev]"     # jupyterlab, nbconvert, pytest, ruff
-pip install -e ".[docs]"    # mkdocs, to build these pages
-```
-
-## Compatibility notes
-
-- TODO: tcrio dataset format versions. A dataset written by a newer tcrio can't be opened by an older
-  one; say which tcrio version vairrify needs.
-- Loading reruns a tcrio operation whose result is missing or out of date (`run_operations=True`).
-  Opening a dataset with a different tcrio version than the one that processed it can therefore
-  recompute results.

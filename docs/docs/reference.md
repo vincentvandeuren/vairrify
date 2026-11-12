@@ -16,7 +16,7 @@ TODO: generate from the docstrings with mkdocstrings. Outline:
 
 - `summary()`, `samples()`
 - `balance()` → `BalanceResult`
-- `pca(n_components)` → `PCAResult`
+- `pca(n_components, block=None)` → `PCAResult` (`.block_shares`: which blocks drive each PC)
 - `variance(...)` → `VarianceResult`
 - `baseline(...)` → `BaselineResult`
 - `within_batch(base, ...)` → table
@@ -29,7 +29,8 @@ TODO: generate from the docstrings with mkdocstrings. Outline:
 
 ## Plots
 
-- `vf.plots.qc`, `balance`, `pca`, `pca_by_batch`, `variance`, `baseline`, `within_batch`, `shap`
+- `vf.plots.qc`, `balance`, `pca`, `pca_by_batch`, `variance`, `baseline`, `roc_pr`, `within_batch`,
+  `shap`, `shap_beeswarm`
 
 ## Statistics
 

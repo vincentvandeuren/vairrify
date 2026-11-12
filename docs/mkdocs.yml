@@ -11,7 +11,8 @@ nav:
   - Concepts: concepts.md
   - Feature blocks: feature-blocks.md
   - Germline variation: germline.md
-  - The audit, step by step:
+  - The vAIRRify worflow: 
+      - Overview:  guide/overview.md 
       - QC: guide/qc.md
       - Study design: guide/design.md
       - Balance over batches: guide/balance.md

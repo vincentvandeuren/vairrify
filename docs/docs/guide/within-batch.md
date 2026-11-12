@@ -1,7 +1,8 @@
 # Within-batch evaluation and SHAP (Fig. 3B)
 
 `within = design.within_batch(base, min_group_class_size=5)` · `vf.plots.within_batch(within)`
-`shap = design.shap(base, target=None)` · `vf.plots.shap(shap)`
+`shap = design.shap(base, target=None, top=15)` · `vf.plots.shap(shap)` ·
+`vf.plots.shap_beeswarm(shap, by="value")` · `vf.plots.shap_beeswarm(shap, by="batch")`
 
 ## What it answers
 
@@ -17,12 +18,27 @@
   recoverable one)
 - Bar colour: positively associated with the class (pink) or negatively (blue), from the sign of the
   correlation between a feature's value and its SHAP value
+- **Beeswarms**: the repertoires behind the bars, for the same `top` features. One dot per out-of-fold
+  repertoire and feature, at its SHAP value: how much that feature changed the repertoire's predicted
+  probability of the class. Dots pile up where values are similar; their height within a row means
+  nothing else
+    - `by="value"`: coloured by the feature's value in that repertoire (pink high, blue low)
+    - `by="batch"`: coloured by the repertoire's batch, triangles for repertoires of the class. With
+      more batches than colours, the batches whose mean prediction is furthest from the average keep a
+      colour
+    - Last row: per repertoire, the summed SHAP values of all the features not shown (`others=False`
+      hides it)
 
 ## Reading the result
 
 - A high AUC across batches that drops within batches points to a batch shortcut
 - Blank cells: no batch holds both the class and the rest
 - Zaslavsky (TRB, V genes): HIV reaches AUC 0.96 across batches but 0.65 within the HIV study
+- Batch beeswarm: one colour on the positive side of most rows points to a batch that carries the
+  signal. Zaslavsky (TRB, V genes): the repertoires pushed towards influenza are the Flu vaccine UPenn
+  2021 batch. Whether that is influenza or the batch, this plot can't tell; the within-batch AUC can
+- With many features (e.g. VJ bias), the summed row can outweigh the features shown: the model then
+  relies on many small differences rather than a few features
 
 ## In the manuscript (Fig. 4)
 

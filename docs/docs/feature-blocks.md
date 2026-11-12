@@ -10,7 +10,6 @@ A feature block is a per-repertoire table computed by tcrio. `vf.feature_blocks(
 | J genes | technical | `GeneCountsSummary` | share of clonotypes using each J gene |
 | VJ bias | technical | `GeneCountsSummary` | log ratio of each V-J pairing to independent V and J usage |
 | VDJ stats | technical | `VdjStatisticsSummary` | mean, sd, skew, kurtosis of trimming, P and N nucleotides |
-| repertoire size | technical | repertoire counts | number of unique clonotypes |
 | depth | technical | `RarefactionReport` | reads; expected clonotypes at 20k / 48k / 200k / 500k reads |
 | HLA | biological | `RepertoireHlaInference` | inferred HLA carriage (score > 0.5) |
 
@@ -23,6 +22,9 @@ A feature block is a per-repertoire table computed by tcrio. `vf.feature_blocks(
   plot; evidence on [Germline variation](germline.md).
 - **depth**: past a repertoire's own reads the rarefaction curve is extrapolated. TODO: how to read
   that, and the share of repertoires reaching each depth.
+- **Repertoire size** (the manuscript's number of unique clonotypes) is not a block: as a single
+  feature it took a whole PC of the joint PCA, whatever its role. Use `depth`, or the metadata column
+  `log10_clonotypes` as a technical variable (`other_technical=["log10_clonotypes"]`).
 - **HLA**: dichotomised at 0.5, as in the manuscript, so repertoire size doesn't leak in. On the
   zaslavsky data the dichotomised scores predict much less than Table 1's HLA column (influenza
   AUC 0.54 vs 0.96); the raw scores reproduce it. TODO: check which the table used.

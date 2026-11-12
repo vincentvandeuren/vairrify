@@ -1,6 +1,7 @@
 # Baseline classifier (Table 1, Fig. 3A)
 
-`base = design.baseline(cv_column=..., min_class_size=10, cv_repeats=3)` · `vf.plots.baseline(base)`
+`base = design.baseline(cv_column=..., min_class_size=10, cv_repeats=3)` · `vf.plots.baseline(base)` ·
+`vf.plots.roc_pr(base)`
 
 ## What it answers
 
@@ -14,10 +15,17 @@ can take the same route.
 - `cv_column`: the downstream model's own folds. Without it: 3 random folds that keep patients
   together and are stratified on batch × label, repeated `cv_repeats` times.
 - The batch is predicted too (a positive control), as are the controls (should sit at 0.5)
+- `vf.plots.roc_pr(base, variable=None, classes=None)`: the out-of-fold ROC and precision-recall curves,
+  one per class of the label (or of `variable`, e.g. the batch), against chance: the diagonal (ROC) and
+  the class's share of the repertoires (precision-recall). With `cv_repeats` > 1 the scores are averaged
+  over the repeats, as for the table. Colours: colorcet's glasbey_dark, distinct for many classes
 
 ## Reading the result
 
 - A high AUC is a shortcut risk, not evidence of biology
+- For a small class, read the precision-recall curve too: AUC can be high while precision stays low.
+  Zaslavsky (TRB, V genes), batch "Healthy-StanfordBloodCenter_included-in-resequencing": AUC 0.94,
+  but AP 0.32 (chance 0.06)
 - TODO: Table 1 comparison for zaslavsky, run with vAIRRify (general repertoire properties, HLA, both)
 
 ## In the manuscript (Table 1, Fig. 3)
