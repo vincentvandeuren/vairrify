@@ -132,10 +132,17 @@ def within_batch(design: StudyDesign, base: BaselineResult, *, min_group_class_s
 
 @dataclass(frozen=True, repr=False)
 class ShapResult(Result):
-    """`table`: mean |SHAP| per feature over out-of-fold repertoires, largest first."""
+    """`table`: mean |SHAP| per feature over out-of-fold repertoires, largest first. The arrays hold the
+    per-repertoire detail for `plots.shap_beeswarm`: a row per repertoire, a column per `table` row."""
     label: str
     target: str
     auc: float
+    values: np.ndarray            # out-of-fold SHAP values
+    data: np.ndarray              # the features' values
+    others: np.ndarray            # per repertoire, the summed SHAP values of the features not in `table`
+    n_others: int                 # how many features that sum covers
+    in_target: np.ndarray         # whether the repertoire belongs to `target`
+    batch: Optional[np.ndarray]   # the repertoire's batch; None if the design has none
 
 
 def shap_importance(design: StudyDesign, base: BaselineResult, *, target: Optional[str], top: int) -> ShapResult:
@@ -163,8 +170,14 @@ def shap_importance(design: StudyDesign, base: BaselineResult, *, target: Option
     # direction: does a higher value push towards the class (positive) or away from it (negative)?
     table = (pl.DataFrame({"feature": design.repertoires.feature_names, "mean_abs_shap": np.abs(values[ok]).mean(axis=0),
                            "value-SHAP correlation": r})
+             .with_row_index("column")
              .with_columns(pl.when(pl.col("value-SHAP correlation") > 0).then(pl.lit("positive"))
                            .when(pl.col("value-SHAP correlation") < 0).then(pl.lit("negative")).otherwise(pl.lit("none"))
                            .alias("association"))
              .sort("mean_abs_shap", descending=True).head(top))
-    return ShapResult(table, design.label, best["class"], best["auc"])
+    cols = table["column"].to_numpy()
+    rest = np.setdiff1d(np.arange(X.shape[1]), cols)
+    batch = (design.repertoires.metadata[design.batch].cast(pl.String).fill_null("unknown").to_numpy()[base.rows][ok]
+             if design.batch else None)
+    return ShapResult(table.drop("column"), design.label, best["class"], best["auc"], values[ok][:, cols],
+                      X[ok][:, cols], values[ok][:, rest].sum(axis=1), len(rest), y[ok], batch)

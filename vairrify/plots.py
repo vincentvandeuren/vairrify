@@ -3,11 +3,20 @@
 from __future__ import annotations
 
 import math
-from typing import Sequence
+from typing import Optional, Sequence
 
+import colorcet as cc
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import numpy as np
 import polars as pl
 import seaborn as sns
+from sklearn.metrics import (
+    average_precision_score,
+    precision_recall_curve,
+    roc_auc_score,
+    roc_curve,
+)
 
 from .baseline import BaselineResult, ShapResult
 from .design import BalanceResult
@@ -19,6 +28,7 @@ BLUE, ORANGE, AQUA, PINK, GREY = "#2a78d6", "#eb6834", "#1baf7a", "#e87ba4", "#a
 CATEGORICAL = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]  # validated order
 SEQUENTIAL = sns.light_palette(BLUE, as_cmap=True)
 DIVERGING = sns.blend_palette([ORANGE, "#f1f0ed", BLUE], as_cmap=True)  # AUC around 0.5
+FEATURE_VALUE = sns.blend_palette([BLUE, "#d6d5d0", PINK], as_cmap=True)  # a feature's low to high values
 ROLE_COLORS = {"technical": BLUE, "label": ORANGE, "covariate": AQUA, "control": GREY, "residual / interactions": "#d6d5d0"}
 
 
@@ -61,20 +71,66 @@ def _colour(scores: pl.DataFrame, label: str):
 
 
 def _explained(result: PCAResult, pc: str) -> str:
-    return f"{pc} ({result.explained[int(pc.removeprefix('PC')) - 1]:.0%})"
+    # "PC1 (37%)"; with several blocks also the blocks driving it, e.g. "PC1 (37%) – 91% V genes".
+    label = f"{pc} ({result.explained[int(pc.removeprefix('PC')) - 1]:.0%})"
+    shares = result.block_shares.select("block", pc).sort(pc, descending=True)
+    if shares.height > 1:
+        main = [(b, s) for b, s in shares.iter_rows() if s >= 0.2] or shares.head(1).rows()
+        label += " – " + ", ".join(f"{s:.0%} {b}" for b, s in main)
+    return label
+
+
+def _of_block(result: PCAResult) -> str:
+    return f" of {result.block}" if result.block else ""
+
+
+# Muted versions of the palette's last six hues (red, violet, green, magenta, yellow, aqua), so blocks don't read as
+# the label colours of the PCA panel beside them: OKLCH chroma x 0.55, lightness alternating dark / light, so touching
+# segments (blocks are coloured by stack position) stay apart. Validated as adjacent pairs: CVD dE >= 16, normal >= 21.
+BLOCK_COLOURS = ["#c4726c", "#5c599e", "#74a86f", "#8d5669", "#d2a970", "#478367"]
+
+
+def _block_bars(result: PCAResult, x: str, y: str, ax):
+    # Each PC's share of the total variance, split by block in proportion to the block's share of the PC's loadings:
+    # a segment is the variance the PC captures from that block.
+    shares = result.block_shares
+    pcs = [c for c in shares.columns if c.startswith("PC")]
+    bottom, handles = np.zeros(len(pcs)), []
+    for i, (block, *share) in enumerate(shares.iter_rows()):
+        colour = BLOCK_COLOURS[i % len(BLOCK_COLOURS)]
+        part = np.array(share) * result.explained[: len(pcs)]
+        captured = part.sum() / result.block_totals[block]  # of the block's own variance
+        handles.append(ax.bar(range(len(pcs)), part, bottom=bottom, color=colour, width=0.75,
+                              edgecolor="black", linewidth=0.5, label=f"{block}: {captured:.0%}"))
+        bottom += part
+    ax.set_xticks(range(len(pcs)), pcs, fontsize=8)
+    for tick in ax.get_xticklabels():
+        tick.set_fontweight("bold" if tick.get_text() in (x, y) else "normal")
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{100 * v:g}%"))  # 2.5%, 5%, ...: no rounded ticks
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set(ylabel="variance explained", title="Variance per PC, by block")
+    ax.legend(handles=handles[::-1], title=f"block: its variance in PC1-{len(pcs)}", loc="upper right", fontsize=8,
+              title_fontsize=8, frameon=False)
 
 
 def pca(result: PCAResult, x: str = "PC1", y: str = "PC2", highlight: Sequence[str] = GERMLINE_V_GENES):
     """Manuscript Fig. 2B: two of the leading PCs, and the features driving them. Features in
-    `highlight` (by default V genes whose usage varies for germline reasons) are marked in orange."""
+    `highlight` (by default V genes whose usage varies for germline reasons) are marked in orange.
+    With several blocks, a third panel splits each PC's explained variance by block, and gives how much of
+    each block's own variance the PCs capture."""
     palette, colour = _colour(result.scores, result.label)
     pcs = result.scores.with_columns(colour.alias("colour"))
     top = result.table.with_columns((pl.col(x) ** 2 + pl.col(y) ** 2).alias("length")).sort("length", descending=True).head(12)
     marked = result.table.filter(pl.col("feature").is_in(list(highlight)))
-    fig, (ax, ax_load) = plt.subplots(1, 2, figsize=(14, 5.5), width_ratios=[1.25, 1])
+    blocks = result.block_shares.height > 1
+    fig, axes = plt.subplots(1, 3 if blocks else 2, figsize=(20 if blocks else 14, 5.5),
+                             width_ratios=[1.25, 1, 0.9] if blocks else [1.25, 1])
+    ax, ax_load = axes[:2]
+    if blocks:
+        _block_bars(result, x, y, axes[2])
     sns.scatterplot(pcs, x=x, y=y, hue="colour", hue_order=list(palette), palette=palette,
                     s=14, linewidth=0, alpha=0.8, ax=ax)
-    ax.set(xlabel=_explained(result, x), ylabel=_explained(result, y), title=f"PCA, coloured by {result.label}")
+    ax.set(xlabel=_explained(result, x), ylabel=_explained(result, y), title=f"PCA{_of_block(result)}, coloured by {result.label}")
     ax.legend(title="", loc="upper left", bbox_to_anchor=(1.01, 1))
     sns.scatterplot(result.table, x=x, y=y, color="#c9c8c3", s=14, linewidth=0, ax=ax_load)
     sns.scatterplot(top, x=x, y=y, color=BLUE, s=24, linewidth=0, label="top 12", ax=ax_load)
@@ -108,7 +164,7 @@ def pca_by_batch(result: PCAResult, x: str = "PC1", y: str = "PC2", ncols: int =
         ax.set_visible(False)
     handles = [plt.Line2D([], [], marker="o", linestyle="", color=c, label=l) for l, c in palette.items()]
     fig.legend(handles=handles, title=result.label, loc="upper left", bbox_to_anchor=(1.0, 0.98))
-    fig.suptitle(f"{x} vs {y} per {result.batch}")
+    fig.suptitle(f"{x} vs {y}{_of_block(result)} per {result.batch}")
     fig.tight_layout()
     return fig
 
@@ -150,6 +206,46 @@ def baseline(result: BaselineResult):
     return fig
 
 
+def roc_pr(result: BaselineResult, variable: Optional[str] = None, classes: Optional[Sequence[str]] = None):
+    """Out-of-fold ROC and precision-recall curves of the baseline classifier: one per class of `variable` (by
+    default the label), each against the rest; `classes` picks some. Colours from colorcet's glasbey_dark, which
+    stays distinct for many classes. Chance (thin, dotted) is the diagonal (ROC) and, in the class's colour, the
+    class's share of the repertoires (PR). With `cv_repeats` > 1 the scores are averaged over the repeats, as for
+    the table, so the curves' AUC and AP match it."""
+    if variable is None:
+        labels = result.table.filter(pl.col("role") == "label")["variable"]
+        if labels.is_empty():
+            raise ValueError("no label class was predicted; see base.table")
+        variable = labels[0]
+    fits = {c: f for (v, c), f in result.fits.items() if v == variable and (classes is None or c in classes)}
+    if not fits:
+        raise ValueError(f"no predicted class of {variable!r} matches; see base.table")
+    fig, (ax_roc, ax_pr) = plt.subplots(1, 2, figsize=(11, 6 + 0.12 * len(fits)), layout="constrained")
+    handles = []
+    for i, (c, fit) in enumerate(fits.items()):  # colour by class, in a fixed order, not by rank
+        colour = cc.glasbey_dark[i % len(cc.glasbey_dark)]
+        ok = ~np.isnan(fit.scores)
+        y, s = fit.y[ok], fit.scores[ok]
+        fpr, tpr, _ = roc_curve(y, s)
+        handles += ax_roc.plot(fpr, tpr, color=colour, linewidth=2,
+                               label=f"{c}: AUC {roc_auc_score(y, s):.2f}, AP {average_precision_score(y, s):.2f}"
+                                     f" (chance {y.mean():.2f})")
+        precision, recall, _ = precision_recall_curve(y, s)
+        ax_pr.step(recall, precision, where="post", color=colour, linewidth=2)
+        ax_pr.axhline(y.mean(), color=colour, linewidth=0.8, linestyle=":")
+    handles += ax_roc.plot([0, 1], [0, 1], color="0.5", linewidth=0.8, linestyle=":",
+                           label="chance: the diagonal (ROC), the class's share (PR, in its colour)")
+    ax_roc.set(xlabel="false positive rate", ylabel="true positive rate", title="ROC")
+    ax_pr.set(xlabel="recall", ylabel="precision", title="Precision-recall")
+    for ax in (ax_roc, ax_pr):
+        ax.set(xlim=(0, 1), ylim=(0, 1.02), aspect="equal")
+    folds = f"folds: {result.cv_column}" if result.cv_column else "random folds"
+    fig.suptitle(f"Baseline classifier, {variable}: each class against the rest, out of fold ({folds})")
+    fig.legend(handles=handles, loc="outside lower center", ncol=2 if len(handles) > 5 else 1, fontsize=8,
+               frameon=False)
+    return fig
+
+
 def within_batch(table: pl.DataFrame):
     """AUC with all batches combined vs within mixed-label batches (blank: no batch holds both classes)."""
     wide = table.select("class", "all batches", "within batch").to_pandas().set_index("class")
@@ -175,4 +271,91 @@ def shap(result: ShapResult):
            title=f"{result.label} = {result.target} vs rest (AUC {result.auc:.2f})")
     ax.legend(title="", loc="lower right")
     fig.tight_layout()
+    return fig
+
+
+def _swarm(x: np.ndarray, width: float = 0.4, nbins: int = 100, seed: int = 0) -> np.ndarray:
+    # Vertical offsets that pile up dots with similar x, as in shap's beeswarm, at most `width` from the row.
+    bins = np.round(nbins * (x - x.min()) / (np.ptp(x) or 1.0))
+    order = np.lexsort((np.random.default_rng(seed).random(len(x)), bins))  # by bin, random within one
+    offsets, layer, last = np.zeros(len(x)), 0, None
+    for i in order:
+        layer = layer + 1 if bins[i] == last else 0
+        offsets[i], last = math.ceil(layer / 2) * (1 if layer % 2 else -1), bins[i]
+    return offsets * width / max(np.abs(offsets).max(), 1)
+
+
+def _scaled(v: np.ndarray) -> np.ndarray:
+    # A feature's values on 0-1 between its 5th and 95th percentile, so a few outliers don't wash out the colours.
+    lo, hi = np.percentile(v, [5, 95])
+    if hi <= lo:
+        lo, hi = v.min(), v.max()
+    return np.clip((v - lo) / (hi - lo), 0, 1) if hi > lo else np.full(len(v), 0.5)
+
+
+def _dot(colour, label: str, marker: str = "o"):
+    return plt.Line2D([], [], marker=marker, linestyle="", color=colour, label=label)
+
+
+def _batch_palette(result: ShapResult) -> dict:
+    # Batches beyond the validated palette fold into "other". The batches the model treats most differently keep
+    # a colour: those whose mean summed SHAP value (= their mean prediction) is furthest from the average, so a
+    # small batch that carries the signal still stands out.
+    total = result.values.sum(axis=1) + result.others
+    ranked = (pl.DataFrame({"batch": result.batch, "total": total})
+              .group_by("batch").agg((pl.col("total").mean() - float(total.mean())).abs().alias("distance"))
+              .sort("distance", "batch", descending=[True, False])["batch"].to_list())
+    return dict(zip(ranked if len(ranked) <= len(CATEGORICAL) else ranked[: len(CATEGORICAL) - 1], CATEGORICAL))
+
+
+def shap_beeswarm(result: ShapResult, by: str = "value", others: bool = True):
+    """The repertoires behind `shap`: one dot per repertoire and feature, at its out-of-fold SHAP value (how
+    much that feature moved the repertoire's predicted probability of the class). Dots pile up where values
+    are similar; their height within a row means nothing else. Same features, same order as `shap`.
+
+    by="value": coloured by the feature's value in that repertoire (pink high, blue low).
+    by="batch": coloured by the repertoire's batch, triangles for repertoires of the class: which batches
+    carry the signal. With more batches than colours, those with the largest SHAP values keep a colour.
+    others: a last row with, per repertoire, the summed SHAP values of all the features not shown (grey
+    when coloured by value). Show more features with `design.shap(base, top=...)`."""
+    if by not in ("value", "batch"):
+        raise ValueError('by must be "value" or "batch"')
+    if by == "batch" and result.batch is None:
+        raise ValueError('the design has no batch; use by="value"')
+    rows = [(f, result.values[:, j], result.data[:, j]) for j, f in enumerate(result.table["feature"])]
+    if others and result.n_others:
+        rows.append((f"sum of {result.n_others} other features", result.others, None))
+    order = np.random.default_rng(0).permutation(len(result.in_target))  # random draw order: no batch always on top
+    if by == "batch":
+        palette = _batch_palette(result)
+        batch_colour = np.array([palette.get(b, GREY) for b in result.batch], dtype=object)
+    fig, ax = plt.subplots(figsize=(11 if by == "batch" else 8, 0.35 * len(rows) + 1.5), layout="constrained")
+    for i, (_, x, v) in enumerate(rows):
+        row = len(rows) - 1 - i  # the first feature at the top
+        y = row + _swarm(x)
+        ax.axhline(row, color="#ebeae6", linewidth=0.6, zorder=0)
+        if by == "value":
+            ax.scatter(x[order], y[order], color=FEATURE_VALUE(_scaled(v))[order] if v is not None else GREY,
+                       s=10, linewidths=0)
+        else:
+            for marker, size, member in (("o", 10, ~result.in_target), ("^", 20, result.in_target)):
+                idx = order[member[order]]
+                ax.scatter(x[idx], y[idx], color=list(batch_colour[idx]), marker=marker, s=size, linewidths=0, alpha=0.85)
+    ax.axvline(0, color="0.6", linewidth=0.8)
+    ax.set_yticks(range(len(rows)), [name for name, _, _ in rows][::-1])
+    ax.set_ylim(-0.7, len(rows) - 0.3)
+    ax.set(xlabel=f"SHAP value: change in predicted probability of {result.target} (out of fold)", ylabel="",
+           title=f"{result.label} = {result.target} vs rest (AUC {result.auc:.2f})")
+    if by == "value":
+        cbar = fig.colorbar(plt.cm.ScalarMappable(norm=plt.Normalize(0, 1), cmap=FEATURE_VALUE), ax=ax,
+                            ticks=[0, 1], aspect=40, pad=0.02)
+        cbar.ax.set_yticklabels(["low", "high"])
+        cbar.set_label("feature value")
+        cbar.outline.set_visible(False)
+    else:
+        n_other = len(set(result.batch)) - len(palette)
+        batches = [_dot(c, b) for b, c in palette.items()] + ([_dot(GREY, f"other ({n_other} batches)")] if n_other else [])
+        fig.legend(handles=batches, title="batch", loc="outside right upper", fontsize=8)
+        fig.legend(handles=[_dot("0.35", result.target, "^"), _dot("0.35", "rest")], title=result.label,
+                   loc="outside right lower", fontsize=8)
     return fig

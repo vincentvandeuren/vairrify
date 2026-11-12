@@ -89,7 +89,7 @@ class StudyDesign:
                                                [v for v in roles if kinds[v] == "categorical"], covariate_missing)
         for v in dropped:
             print(f"{v!r} left out of PCA / variance: a single level left")
-        structure = structure.with_X(su.standardize(structure.X) * reps.weights)
+        structure = structure.with_X(su.standardize(structure.X) * reps.weights(structure.X))
         return cls(reps, roles, kinds, label, batch, analysis_md, keep, excluded, structure)
 
     @property
@@ -144,9 +144,10 @@ class StudyDesign:
 
     # --- 8-9. structure ---------------------------------------------------------------------
 
-    def pca(self, n_components: int = 10):
-        """Manuscript Fig. 2B."""
-        return _variance.pca(self, n_components)
+    def pca(self, n_components: int = 10, block: Optional[str] = None):
+        """Manuscript Fig. 2B. By default of all loaded blocks together, each counting equally; `block`
+        restricts it to one of them. `.block_shares` shows which blocks drive each PC."""
+        return _variance.pca(self, n_components, block)
 
     def variance(self, *, permutations: int = 999, pvca_bins: Optional[Mapping[str, Sequence[float]]] = None,
                  pvca_n_bins: int = 4):
@@ -163,5 +164,6 @@ class StudyDesign:
         return _baseline.within_batch(self, base, min_group_class_size=min_group_class_size)
 
     def shap(self, base, target: Optional[str] = None, top: int = 15):
-        """Mean |SHAP| for one label class (`target`); by default the most recoverable one."""
+        """Mean |SHAP| for one label class (`target`); by default the most recoverable one. Draw it with
+        `plots.shap`, and the per-repertoire values with `plots.shap_beeswarm`."""
         return _baseline.shap_importance(self, base, target=target, top=top)

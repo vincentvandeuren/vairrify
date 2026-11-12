@@ -55,7 +55,7 @@ def flag_repertoires(reps: Repertoires, *, min_clonotypes: int, max_zero: int, o
     spread = 1.4826 * np.nanmedian(np.abs(profile - typical), axis=0)
     spread = np.where(spread > 0, spread, np.nanstd(profile, axis=0) + 1e-12)
     z2 = ((profile - typical) / spread) ** 2
-    distance = np.sqrt((z2 * reps.weights ** 2).sum(axis=1) / len(reps.features))
+    distance = np.sqrt((z2 * reps.weights(profile) ** 2).sum(axis=1) / len(reps.features))
     q1, q3 = np.nanpercentile(distance, [25, 75])
     cutoff = q3 + outlier_iqr * (q3 - q1)
     genes = np.isin(reps.block_of, [b for b in reps.features if FEATURE_BLOCKS[b].profile is gene_usage_profile])

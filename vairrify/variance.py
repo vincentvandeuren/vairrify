@@ -29,11 +29,20 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True, repr=False)
 class PCAResult(Result):
-    """`table`: each feature's loadings on PC1, PC2, ...; `scores` the repertoires' metadata and PCs."""
+    """`table`: each feature's block and loadings on PC1, PC2, ...; `scores` the repertoires' metadata and PCs."""
     scores: pl.DataFrame
     explained: np.ndarray
     label: str
     batch: Optional[str]
+    block: Optional[str] = None   # the one block analysed; None = all loaded blocks together
+    block_totals: Optional[Mapping[str, float]] = None  # each block's share of the total variance (1 / blocks by design)
+
+    @property
+    def block_shares(self) -> pl.DataFrame:
+        """Per block, its share of each PC's loadings (squared loadings; each PC's shares sum to 1). With
+        several blocks: which blocks drive a PC."""
+        pcs = [c for c in self.table.columns if c.startswith("PC")]
+        return self.table.group_by("block", maintain_order=True).agg((pl.col(pcs) ** 2).sum())
 
 
 @dataclass(frozen=True, repr=False)
@@ -44,16 +53,24 @@ class VarianceResult(Result):
     model_r2: float
 
 
-def pca(design: StudyDesign, n_components: int) -> PCAResult:
-    X = design.structure.X
+def pca(design: StudyDesign, n_components: int, block: Optional[str] = None) -> PCAResult:
+    # The design's standardised profile; one block's columns of it for a per-block PCA.
+    reps = design.repertoires
+    if block is not None and block not in reps.features:
+        raise ValueError(f"{block!r} is not a loaded block; loaded: {reps.features}")
+    cols = np.ones(len(reps.feature_names), dtype=bool) if block is None else reps.block_of == block
+    X = design.structure.X[:, cols]
     if X.shape[1] < 2:
         raise ValueError("PCA needs at least two features")
     fit = PCA(n_components=min(n_components, X.shape[1])).fit(X)
     s = fit.transform(X)
     pcs = [f"PC{i + 1}" for i in range(fit.n_components_)]
     scores = design.structure.metadata.with_columns(*[pl.Series(pc, s[:, i]) for i, pc in enumerate(pcs)])
-    loadings = pl.DataFrame({"feature": design.repertoires.feature_names, **{pc: fit.components_[i] for i, pc in enumerate(pcs)}})
-    return PCAResult(loadings, scores, fit.explained_variance_ratio_, design.label, design.batch)
+    loadings = pl.DataFrame({"feature": np.asarray(reps.feature_names)[cols], "block": reps.block_of[cols],
+                             **{pc: fit.components_[i] for i, pc in enumerate(pcs)}})
+    var = X.var(axis=0, ddof=1)  # as PCA's explained_variance_ratio_
+    totals = {str(b): float(var[reps.block_of[cols] == b].sum() / var.sum()) for b in dict.fromkeys(reps.block_of[cols])}
+    return PCAResult(loadings, scores, fit.explained_variance_ratio_, design.label, design.batch, block, totals)
 
 
 def prepare(X, md, continuous, categorical, missing) -> tuple[su.Design, list[str]]:

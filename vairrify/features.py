@@ -32,7 +32,7 @@ class FeatureBlock:
     kind: str                                         # "technical" or "biological"
     description: str
     read_table: Callable[[Dataset], pl.DataFrame]     # repertoire_id + one column per feature
-    artifact: Optional[Artifact] = None               # the tcrio result read; None = repertoire counts
+    artifact: Optional[Artifact] = None               # the tcrio result read; None = read_table alone
     profile: Optional[Callable[[np.ndarray, np.ndarray], np.ndarray]] = None  # what PCA and variance see
 
     @property
@@ -91,8 +91,6 @@ FEATURE_BLOCKS: dict[str, FeatureBlock] = {b.name: b for b in (
     FeatureBlock("VDJ stats", "technical", "mean, sd, skew and kurtosis of trimming, P and N nucleotides",
                  _result(ops.VdjStatisticsSummary.summary, lambda t: t.select(pl.exclude("^.*_sum$"))),
                  ops.VdjStatisticsSummary.summary),
-    FeatureBlock("repertoire size", "technical", "number of unique clonotypes",
-                 lambda ds: ds.repertoire_counts.select("repertoire_id", "n_clonotypes")),
     FeatureBlock("depth", "technical", "reads, and expected unique clonotypes at 20k / 48k / 200k / 500k reads (rarefaction)",
                  _depth, ops.RarefactionReport.rarefaction_curves),
     # dichotomised as in the manuscript, so repertoire size does not leak in through the scores
@@ -106,7 +104,7 @@ FEATURE_BLOCKS: dict[str, FeatureBlock] = {b.name: b for b in (
 def feature_blocks() -> pl.DataFrame:
     """The blocks a feature set can be built from."""
     return pl.DataFrame([
-        {"block": b.name, "kind": b.kind, "source": b.operation.__name__ if b.operation else "repertoire counts",
+        {"block": b.name, "kind": b.kind, "source": b.operation.__name__ if b.operation else "read_table",
          "description": b.description}
         for b in FEATURE_BLOCKS.values()
     ])

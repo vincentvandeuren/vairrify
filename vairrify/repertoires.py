@@ -88,11 +88,13 @@ class Repertoires:
             parts.append(profile(X, self.clonotypes) if profile else X)
         return np.hstack(parts)
 
-    @property
-    def weights(self) -> np.ndarray:
-        """Per feature, 1 / sqrt(its block's features): applied to standardised features, every block counts equally."""
-        sizes = {b: (self.block_of == b).sum() for b in self.features}
-        return 1 / np.sqrt(np.array([sizes[b] for b in self.block_of]))
+    def weights(self, X: np.ndarray) -> np.ndarray:
+        """Per feature, 1 / sqrt(how many features of its block vary in `X`, the repertoires analysed): applied to
+        standardised features, every block counts equally. A feature that doesn't vary (e.g. an HLA allele nobody
+        carries) adds nothing, so it mustn't count towards its block's size either; it gets weight 0."""
+        varies = np.nanstd(X, axis=0) > 0
+        counts = {b: varies[self.block_of == b].sum() for b in self.features}
+        return np.array([1 / np.sqrt(counts[b]) if counts[b] and v else 0.0 for b, v in zip(self.block_of, varies)])
 
     # --- 2. inspect -------------------------------------------------------------------------
 
