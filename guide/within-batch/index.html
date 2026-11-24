@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../design/">Study design</a>
@@ -90,26 +93,27 @@
     </ul>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -125,7 +129,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">The audit, step by step</li>
+          <li class="breadcrumb-item">The vAIRRify worflow</li>
       <li class="breadcrumb-item active">Within-batch evaluation and SHAP</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/guide/within-batch.md" class="icon icon-github"> Edit on GitHub</a>
@@ -138,7 +142,8 @@
               
                 <h1 id="within-batch-evaluation-and-shap-fig-3b">Within-batch evaluation and SHAP (Fig. 3B)</h1>
 <p><code>within = design.within_batch(base, min_group_class_size=5)</code> · <code>vf.plots.within_batch(within)</code>
-<code>shap = design.shap(base, target=None)</code> · <code>vf.plots.shap(shap)</code></p>
+<code>shap = design.shap(base, target=None, top=15)</code> · <code>vf.plots.shap(shap)</code> ·
+<code>vf.plots.shap_beeswarm(shap, by="value")</code> · <code>vf.plots.shap_beeswarm(shap, by="batch")</code></p>
 <h2 id="what-it-answers">What it answers</h2>
 <ul>
 <li>Within batch: does the signal hold once the batch is fixed?</li>
@@ -153,12 +158,29 @@
   recoverable one)</li>
 <li>Bar colour: positively associated with the class (pink) or negatively (blue), from the sign of the
   correlation between a feature's value and its SHAP value</li>
+<li><strong>Beeswarms</strong>: the repertoires behind the bars, for the same <code>top</code> features. One dot per out-of-fold
+  repertoire and feature, at its SHAP value: how much that feature changed the repertoire's predicted
+  probability of the class. Dots pile up where values are similar; their height within a row means
+  nothing else<ul>
+<li><code>by="value"</code>: coloured by the feature's value in that repertoire (pink high, blue low)</li>
+<li><code>by="batch"</code>: coloured by the repertoire's batch, triangles for repertoires of the class. With
+  more batches than colours, the batches whose mean prediction is furthest from the average keep a
+  colour</li>
+<li>Last row: per repertoire, the summed SHAP values of all the features not shown (<code>others=False</code>
+  hides it)</li>
+</ul>
+</li>
 </ul>
 <h2 id="reading-the-result">Reading the result</h2>
 <ul>
 <li>A high AUC across batches that drops within batches points to a batch shortcut</li>
 <li>Blank cells: no batch holds both the class and the rest</li>
 <li>Zaslavsky (TRB, V genes): HIV reaches AUC 0.96 across batches but 0.65 within the HIV study</li>
+<li>Batch beeswarm: one colour on the positive side of most rows points to a batch that carries the
+  signal. Zaslavsky (TRB, V genes): the repertoires pushed towards influenza are the Flu vaccine UPenn
+  2021 batch. Whether that is influenza or the batch, this plot can't tell; the within-batch AUC can</li>
+<li>With many features (e.g. VJ bias), the summed row can outweigh the features shown: the model then
+  relies on many small differences rather than a few features</li>
 </ul>
 <h2 id="in-the-manuscript-fig-4">In the manuscript (Fig. 4)</h2>
 <ul>
@@ -193,7 +215,7 @@
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../baseline/" class="btn btn-neutral float-left" title="Baseline classifier"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../walkthrough/" class="btn btn-neutral float-right" title="Walkthrough notebooks">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../walkthrough/" class="btn btn-neutral float-right" title="Overview and downloads">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>

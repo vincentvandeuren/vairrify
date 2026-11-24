@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../design/">Study design</a>
@@ -88,26 +91,27 @@
                   <li class="toctree-l1"><a class="reference internal" href="../within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -123,7 +127,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">The audit, step by step</li>
+          <li class="breadcrumb-item">The vAIRRify worflow</li>
       <li class="breadcrumb-item active">PCA</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/guide/pca.md" class="icon icon-github"> Edit on GitHub</a>
@@ -135,7 +139,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="pca-fig-2b">PCA (Fig. 2B)</h1>
-<p><code>pca = design.pca(n_components=10)</code> · <code>vf.plots.pca(pca, x="PC1", y="PC2")</code> · <code>vf.plots.pca_by_batch(pca)</code></p>
+<p><code>pca = design.pca(n_components=10)</code> · <code>vf.plots.pca(pca, x="PC1", y="PC2")</code> · <code>vf.plots.pca_by_batch(pca)</code>
+· per block: <code>design.pca(n_components=10, block="V genes")</code></p>
 <h2 id="what-it-answers">What it answers</h2>
 <p>Do repertoires cluster by batch rather than by label?</p>
 <h2 id="how-it-works">How it works</h2>
@@ -145,12 +150,31 @@
 <li>Loadings panel: the 12 features loading most on the chosen components, and in orange the V genes
   whose usage varies for germline reasons (see <a href="../../germline/">Germline variation</a>)</li>
 <li>Per-batch panels: one batch coloured over all others in grey</li>
+<li>Several blocks: each block's standardised features are weighted by 1 / √(its number of features that
+  vary in the analysed repertoires), so every block has the same total variance. Features that don't
+  vary (e.g. HLA alleles nobody in the cohort carries) don't count. That doesn't make them count equally on the leading PCs: a
+  block whose features vary together puts its variance on one axis and can take a whole PC, while a block
+  of many independent features spreads it over many and hardly shows<ul>
+<li>The axis labels name the blocks driving each PC, e.g. "PC1 (27%) – 90% depth": each block's
+  share of the PC's squared loadings. <code>pca.block_shares</code> has them for every PC</li>
+<li>A third panel splits each PC's explained variance by block (a bar per PC, the plotted two in
+  bold): a segment is the variance that PC captures from that block. Each block starts with the same
+  share of the total, so the legend gives how much of each block's own variance the PCs shown
+  capture. Zaslavsky (V genes + VJ bias + depth): PC1-10 hold all of depth, 69% of V genes, 9% of
+  VJ bias</li>
+<li>Block colours are muted, so they don't read as the label colours of the PCA panel beside them</li>
+<li><code>design.pca(..., block=b)</code>: a PCA of one block alone, as in the manuscript's V-gene PCA</li>
+</ul>
+</li>
 </ul>
 <h2 id="reading-the-result">Reading the result</h2>
 <ul>
 <li>Batches forming their own clusters means batch drives the features</li>
 <li>Features that load on these PCs and also carry the baseline classifier (SHAP) point to a batch shortcut</li>
 <li>Zaslavsky (TRB, V genes): PC1 explains 24% and PC2 14%. TODO: describe the clusters.</li>
+<li>Zaslavsky (TRB, V genes + VJ bias + depth): joint PC1 is 90% depth, whose five features move largely
+  together (73% on its own PC1); VJ bias makes up at most 7% of the first four joint PCs, so only its
+  own PCA shows it</li>
 </ul>
 <h2 id="in-the-manuscript-fig-2b">In the manuscript (Fig. 2B)</h2>
 <ul>
@@ -167,6 +191,8 @@
 <h2 id="caveats">Caveats</h2>
 <ul>
 <li>Needs at least two features</li>
+<li>With several blocks, read the joint PCA together with the per-block ones: a block absent from the
+  leading joint PCs can still separate batches on its own</li>
 </ul>
               
             </div>

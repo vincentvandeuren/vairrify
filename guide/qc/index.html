@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">QC</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#what-it-answers">What it answers</a>
@@ -86,26 +89,27 @@
                   <li class="toctree-l1"><a class="reference internal" href="../within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -121,7 +125,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">The audit, step by step</li>
+          <li class="breadcrumb-item">The vAIRRify worflow</li>
       <li class="breadcrumb-item active">QC</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/guide/qc.md" class="icon icon-github"> Edit on GitHub</a>
@@ -177,7 +181,7 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../germline/" class="btn btn-neutral float-left" title="Germline variation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../design/" class="btn btn-neutral float-right" title="Study design">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -205,7 +209,7 @@
         </span>
     
     
-      <span><a href="../../germline/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../design/" style="color: #fcfcfc">Next &raquo;</a></span>

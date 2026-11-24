@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -71,8 +72,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="guide/design/">Study design</a>
@@ -88,26 +91,27 @@
                   <li class="toctree-l1"><a class="reference internal" href="guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -136,14 +140,14 @@
                 <h1 id="vairrify">vAIRRify</h1>
 <p>Machine-learning models trained on adaptive immune receptor repertoires (AIRR-seq) can reach high
 accuracy by recognising technical variation, such as the sequencing batch, depth or library
-preparation, instead of the biology they are meant to learn: <strong>shortcut learning</strong>. vAIRRify audits a
-dataset for such shortcuts, before a model is trained or while its results are evaluated.</p>
+preparation, instead of the biology they are meant to learn: <strong>shortcut learning</strong>.</p>
+<p>vAIRRify audits a dataset for such shortcuts, before a model is trained or while its results are evaluated.</p>
 <p>It implements the analyses of the first part of <em>Disentangling Biological Signal from Technical Bias
 in Disease Diagnostics from Adaptive Immune Receptor Repertoires</em> (see <a href="#citation">Citation</a>).</p>
-<p>Why it matters, from the manuscript:</p>
+<p>We show for the Mal-ID training data (Zaslavsky et al.) that:</p>
 <ul>
-<li>In the Mal-ID training data (Zaslavsky et al.), a random forest on simple repertoire properties
-  (repertoire size, V and J usage, V-J pairing, VDJ recombination statistics) predicted each disease
+<li>a random forest on simple repertoire properties
+  (such as reperertoire size, V/J gene frequency) predicted each disease
   as well as, or better than, three published classifiers (Table 1)</li>
 <li>Those classifiers performed worse within batches than across them, a sign of shortcut learning (Fig. 4)</li>
 <li>They also transferred poorly to independent COVID-19, lupus and T1D cohorts</li>
@@ -159,7 +163,7 @@ in Disease Diagnostics from Adaptive Immune Receptor Repertoires</em> (see <a hr
 </thead>
 <tbody>
 <tr>
-<td>Are the label and the batch tied together?</td>
+<td>Are the label and the (sequencing) batch tied together?</td>
 <td>repertoires per batch and label, Cramér's V, mixed- vs single-label batches</td>
 <td>Fig. S1</td>
 </tr>
@@ -174,14 +178,14 @@ in Disease Diagnostics from Adaptive Immune Receptor Repertoires</em> (see <a hr
 <td>Table 1, Fig. 3A</td>
 </tr>
 <tr>
-<td>Does that signal hold once the batch is fixed?</td>
-<td>within-batch evaluation</td>
-<td>within-batch evaluation</td>
-</tr>
-<tr>
 <td>Which features carry it?</td>
 <td>SHAP</td>
 <td>Fig. 3B</td>
+</tr>
+<tr>
+<td>Does that signal hold once the batch is fixed?</td>
+<td>within-batch evaluation</td>
+<td>within-batch evaluation</td>
 </tr>
 </tbody>
 </table>
@@ -203,7 +207,6 @@ design.within_batch(base)            # ... also within mixed-label batches?
 <ul>
 <li><a href="installation/">Installation</a> and <a href="getting-started/">Getting started</a>: from clonotype files to a first audit</li>
 <li><a href="concepts/">Concepts</a>: shortcut learning, variable roles, feature blocks</li>
-<li><a href="guide/qc/">The audit, step by step</a>: what each step answers and how to read it</li>
 <li><a href="walkthrough/">Walkthrough notebooks</a></li>
 </ul>
 <h2 id="citation">Citation</h2>
@@ -371,5 +374,5 @@ from Adaptive Immune Receptor Repertoires.</em> TODO: journal or preprint, year,
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-10-28 16:28:40.730106+00:00
+Build Date UTC : 2026-11-24 14:48:06.892011+00:00
 -->

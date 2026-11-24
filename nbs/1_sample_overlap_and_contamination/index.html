@@ -5,14 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Step 1. Sample contamination and swapping analysis - vAIRRify</title>
+    <title>1. Sample overlap and contamination - vAIRRify</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Step 1. Sample contamination and swapping analysis";
+        var mkdocs_page_name = "1. Sample overlap and contamination";
         var mkdocs_page_input_path = "nbs/1_sample_overlap_and_contamination.ipynb";
         var mkdocs_page_url = null;
       </script>
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/design/">Study design</a>
@@ -76,28 +79,29 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
-                </li>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1. Sample overlap and contamination</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Step 1. Sample contamination and swapping analysis</a>
-    <ul class="current">
-    </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -113,8 +117,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Example notebooks</li>
-      <li class="breadcrumb-item active">Step 1. Sample contamination and swapping analysis</li>
+          <li class="breadcrumb-item">Walkthrough notebooks</li>
+      <li class="breadcrumb-item active">1. Sample overlap and contamination</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/notebooks/1_sample_overlap_and_contamination.ipynb" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -950,8 +954,8 @@ def plot_overlap(ds:Dataset, x="hla_dist", y="n_overlap", locus="TRB"):
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../0_ingest_data/" class="btn btn-neutral float-left" title="Step 0 - AIRR data ingestion"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../2_shorcut_learning/" class="btn btn-neutral float-right" title="Step 2 - vAIRRify analysis: technical variation, labels and shortcuts">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../0_ingest_data/" class="btn btn-neutral float-left" title="0. Ingest the data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../2_shortcut_learning/" class="btn btn-neutral float-right" title="2. Shortcut learning">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -981,7 +985,7 @@ def plot_overlap(ds:Dataset, x="hla_dist", y="n_overlap", locus="TRB"):
       <span><a href="../0_ingest_data/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../2_shorcut_learning/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../2_shortcut_learning/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

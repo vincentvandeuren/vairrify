@@ -5,14 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Walkthrough notebooks - vAIRRify</title>
+    <title>Overview and downloads - vAIRRify</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Walkthrough notebooks";
+        var mkdocs_page_name = "Overview and downloads";
         var mkdocs_page_input_path = "walkthrough.md";
         var mkdocs_page_url = null;
       </script>
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/design/">Study design</a>
@@ -76,28 +79,33 @@
                   <li class="toctree-l1"><a class="reference internal" href="../guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Walkthrough notebooks</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Overview and downloads</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#advanced-examples">Advanced examples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-a-notebook">Running a notebook</a>
+    </li>
     </ul>
-                </li>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -113,7 +121,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Walkthrough notebooks</li>
+          <li class="breadcrumb-item">Walkthrough notebooks</li>
+      <li class="breadcrumb-item active">Overview and downloads</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/master/docs/walkthrough.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -124,44 +133,73 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="walkthrough-notebooks">Walkthrough notebooks</h1>
-<p>The <code>notebooks/</code> folder of the repository walks through a full audit, step by step. Each decision sits
-in a cell marked ⚙.</p>
+<p>These notebooks run a full audit, from clonotype files to the shortcut analysis. Read them here, with
+their outputs, or download them to run on your own data.</p>
 <table>
 <thead>
 <tr>
 <th>Notebook</th>
+<th>Download</th>
 <th>What it does</th>
 <th>Needs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>0_ingest_data</code></td>
-<td>clonotype files and metadata → a tcrio dataset; filtering report</td>
+<td><a href="../nbs/0_ingest_data/">0. Ingest the data</a></td>
+<td><a download="0_ingest_data.ipynb" href="../download/0_ingest_data.ipynb">⬇ .ipynb</a></td>
+<td>standardization and filtering of clonotype tables and metedata</td>
 <td>clonotype tables, metadata</td>
 </tr>
 <tr>
-<td><code>1_sample_overlap_and_contamination</code></td>
+<td><a href="../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a></td>
+<td><a download="1_sample_overlap_and_contamination.ipynb" href="../download/1_sample_overlap_and_contamination.ipynb">⬇ .ipynb</a></td>
 <td>shared clonotypes between repertoires, possible contamination</td>
 <td>an ingested dataset</td>
 </tr>
 <tr>
-<td><code>2f_audit</code> (TODO: rename)</td>
-<td>the audit: QC, design, balance, PCA, variance, baseline, within batch, SHAP</td>
+<td><a href="../nbs/2_shortcut_learning/">2. The vAIRRify audit</a></td>
+<td><a download="2_shortcut_learning.ipynb" href="../download/2_shortcut_learning.ipynb">⬇ .ipynb</a></td>
+<td>shortcut learning analysis on general repertoire properties</td>
 <td>an ingested dataset</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>TODO: an example dataset readers can download, and the expected run time</li>
-<li>TODO: render the notebooks here with mkdocs-jupyter</li>
-</ul>
+<h2 id="advanced-examples">Advanced examples</h2>
+<p>The audit of notebook 2 with other choices. Start with the walkthrough above.</p>
+<table>
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Download</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a></td>
+<td><a download="2_shortcut_learning_bcr.ipynb" href="../download/2_shortcut_learning_bcr.ipynb">⬇ .ipynb</a></td>
+<td>the same dataset, on the B-cell heavy chain instead of TRB, with V and J genes</td>
+</tr>
+<tr>
+<td><a href="../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a></td>
+<td><a download="2_shortcut_learning_vlasova.ipynb" href="../download/2_shortcut_learning_vlasova.ipynb">⬇ .ipynb</a></td>
+<td>the <code>vlasova_2026</code> dataset, with COVID status as the label and V genes, J genes and depth combined</td>
+</tr>
+</tbody>
+</table>
+<h2 id="running-a-notebook">Running a notebook</h2>
+<ol>
+<li>Install vairrify (see <a href="../installation/">Installation</a>) and JupyterLab: <code>pip install jupyterlab</code>.</li>
+<li>Download the notebook and open it with <code>jupyter lab</code>.</li>
+<li>Point them to your own datasets and choose your parameters</li>
+</ol>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../guide/within-batch/" class="btn btn-neutral float-left" title="Within-batch evaluation and SHAP"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../reference/" class="btn btn-neutral float-right" title="API reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../nbs/0_ingest_data/" class="btn btn-neutral float-right" title="0. Ingest the data">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -191,7 +229,7 @@ in a cell marked ⚙.</p>
       <span><a href="../guide/within-batch/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../reference/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../nbs/0_ingest_data/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

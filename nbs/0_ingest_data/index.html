@@ -5,14 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Vincent M.L. Van Deuren" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Step 0 - AIRR data ingestion - vAIRRify</title>
+    <title>0. Ingest the data - vAIRRify</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Step 0 - AIRR data ingestion";
+        var mkdocs_page_name = "0. Ingest the data";
         var mkdocs_page_input_path = "nbs/0_ingest_data.ipynb";
         var mkdocs_page_url = null;
       </script>
@@ -59,8 +60,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/design/">Study design</a>
@@ -76,21 +79,11 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Walkthrough notebooks</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../reference/">API reference</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
-                </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Step 0 - AIRR data ingestion</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">0. Ingest the data</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#1-data-ingestion">1. Data ingestion</a>
     </li>
@@ -100,10 +93,21 @@
     </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning/">2. Shortcut learning</a>
                   </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../limitations/">Limitations</a>
+                </li>
               </ul>
       </div>
     </div>
@@ -119,8 +123,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Example notebooks</li>
-      <li class="breadcrumb-item active">Step 0 - AIRR data ingestion</li>
+          <li class="breadcrumb-item">Walkthrough notebooks</li>
+      <li class="breadcrumb-item active">0. Ingest the data</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/vincentvandeuren/vairrify/edit/notebooks/0_ingest_data.ipynb" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -2746,8 +2750,8 @@ filter_report = filter_totals.join(counts, on="repertoire_id", how="left").join(
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../limitations/" class="btn btn-neutral float-left" title="Limitations"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../1_sample_overlap_and_contamination/" class="btn btn-neutral float-right" title="Step 1. Sample contamination and swapping analysis">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../walkthrough/" class="btn btn-neutral float-left" title="Overview and downloads"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../1_sample_overlap_and_contamination/" class="btn btn-neutral float-right" title="1. Sample overlap and contamination">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -2774,7 +2778,7 @@ filter_report = filter_totals.join(counts, on="repertoire_id", how="left").join(
         </span>
     
     
-      <span><a href="../../limitations/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../walkthrough/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../1_sample_overlap_and_contamination/" style="color: #fcfcfc">Next &raquo;</a></span>

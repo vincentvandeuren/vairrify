@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -67,8 +68,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/design/">Study design</a>
@@ -84,26 +87,27 @@
                   <li class="toctree-l1"><a class="reference internal" href="../guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -168,12 +172,6 @@
 <td>mean, sd, skew, kurtosis of trimming, P and N nucleotides</td>
 </tr>
 <tr>
-<td>repertoire size</td>
-<td>technical</td>
-<td>repertoire counts</td>
-<td>number of unique clonotypes</td>
-</tr>
-<tr>
 <td>depth</td>
 <td>technical</td>
 <td><code>RarefactionReport</code></td>
@@ -196,6 +194,9 @@
   plot; evidence on <a href="../germline/">Germline variation</a>.</li>
 <li><strong>depth</strong>: past a repertoire's own reads the rarefaction curve is extrapolated. TODO: how to read
   that, and the share of repertoires reaching each depth.</li>
+<li><strong>Repertoire size</strong> (the manuscript's number of unique clonotypes) is not a block: as a single
+  feature it took a whole PC of the joint PCA, whatever its role. Use <code>depth</code>, or the metadata column
+  <code>log10_clonotypes</code> as a technical variable (<code>other_technical=["log10_clonotypes"]</code>).</li>
 <li><strong>HLA</strong>: dichotomised at 0.5, as in the manuscript, so repertoire size doesn't leak in. On the
   zaslavsky data the dichotomised scores predict much less than Table 1's HLA column (influenza
   AUC 0.54 vs 0.96); the raw scores reproduce it. TODO: check which the table used.</li>

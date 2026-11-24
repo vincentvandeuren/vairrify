@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -48,10 +49,6 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#conda">conda</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#for-development">For development</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#compatibility-notes">Compatibility notes</a>
-    </li>
     </ul>
                 </li>
               </ul>
@@ -71,8 +68,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../germline/">Germline variation</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">The audit, step by step</span></p>
+              <p class="caption"><span class="caption-text">The vAIRRify worflow</span></p>
               <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../guide/overview/">Overview</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/qc/">QC</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../guide/design/">Study design</a>
@@ -88,26 +87,27 @@
                   <li class="toctree-l1"><a class="reference internal" href="../guide/within-batch/">Within-batch evaluation and SHAP</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Walkthrough notebooks</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Walkthrough notebooks</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../walkthrough/">Overview and downloads</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">0. Ingest the data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">1. Sample overlap and contamination</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning/">2. Shortcut learning</a>
+                  </li>
               </ul>
+              <p class="caption"><span class="caption-text">Advanced examples</span></p>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../reference/">API reference</a>
-                </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_bcr/">B cells (IGH)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shortcut_learning_vlasova/">Another dataset and label</a>
+                  </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
                 </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Example notebooks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/0_ingest_data/">Step 0 - AIRR data ingestion</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/1_sample_overlap_and_contamination/">Step 1. Sample contamination and swapping analysis</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../nbs/2_shorcut_learning/">Step 2 - vAIRRify analysis: technical variation, labels and shortcuts</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -139,7 +139,7 @@
 <li>Python 3.10 or newer</li>
 <li><a href="https://github.com/vincentvandeuren/tcr_qc">tcrio</a>, which reads and processes the repertoires. It is
   installed automatically, from PyPI.</li>
-<li>polars below 2.0: tcrio's compiled extension is tied to the polars version it was built against.</li>
+<li>polars (below 2 i guess, I think tcrio pins that, but I might want to remove that pin #TODO)</li>
 </ul>
 <h2 id="pip">pip</h2>
 <pre><code class="language-bash">pip install vairrify                                              # TODO: once on PyPI
@@ -153,18 +153,6 @@ cd vairrify
 conda env create -f environment.yml
 conda activate vairrify
 </code></pre>
-<h2 id="for-development">For development</h2>
-<pre><code class="language-bash">pip install -e &quot;.[dev]&quot;     # jupyterlab, nbconvert, pytest, ruff
-pip install -e &quot;.[docs]&quot;    # mkdocs, to build these pages
-</code></pre>
-<h2 id="compatibility-notes">Compatibility notes</h2>
-<ul>
-<li>TODO: tcrio dataset format versions. A dataset written by a newer tcrio can't be opened by an older
-  one; say which tcrio version vairrify needs.</li>
-<li>Loading reruns a tcrio operation whose result is missing or out of date (<code>run_operations=True</code>).
-  Opening a dataset with a different tcrio version than the one that processed it can therefore
-  recompute results.</li>
-</ul>
               
             </div>
           </div><footer>
