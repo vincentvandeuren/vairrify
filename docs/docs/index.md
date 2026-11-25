@@ -57,7 +57,7 @@ design.within_batch(base)            # ... also within mixed-label batches?
 
 Stadelmaier J.\*, Van Deuren V.\*, Greiff V., Kowarik M., Mariotti-Ferrandiz E., Minervina A. A.,
 Nahnsen S., Pogorelyy M. V., Rawat P., Sandve G. K., Semerci A., Stervbo U., Thomas P. G., Yaari G.,
-Gabernet G.§, Meysman P.§ *Disentangling Biological Signal from Technical Bias in Disease Diagnostics
+Gabernet G.§, Meysman P.§ *Disentangling Biological from Confounding Signals in Disease Diagnostics
 from Adaptive Immune Receptor Repertoires.* TODO: journal or preprint, year, DOI.
 (\* shared first authors, § shared senior authors)
 
